@@ -26,5 +26,5 @@ class UserApi(Resource):
         return '', 200
 
     def get(self, id):
-        movies = User.objects.get(id=id).to_json()
-        return Response(movies, mimetype="application/json", status=200)
+        users = User.objects.get(id=id).to_json()
+        return Response(users, mimetype="application/json", status=200)
