@@ -1,6 +1,7 @@
 from api.utils.database import db
 from datetime import datetime
 from mongoengine import signals
+from flask_bcrypt import generate_password_hash, check_password_hash
 
 
 class Followers(db.EmbeddedDocument):
@@ -24,6 +25,12 @@ class User(db.Document):
     @classmethod
     def pre_save(cls, sender, document, **kwargs):
         document.update_on = datetime.utcnow()
+
+    def hash_password(self):
+        self.password = generate_password_hash(self.password).decode('utf8')
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 
 signals.pre_save.connect(User.pre_save, sender=User)
