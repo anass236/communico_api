@@ -7,6 +7,7 @@ from api.utils.database import initialize_db
 from api.ressources.routes import initialize_routes
 from dotenv import load_dotenv
 from os.path import dirname
+from api.ressources.errors import errors
 
 
 dotenv_path = f'{dirname(__file__)}/.env'
@@ -14,7 +15,7 @@ load_dotenv(dotenv_path)
 
 app = Flask(__name__)
 app.config.from_object('api.config.default')
-api = Api(app)
+api = Api(app, errors=errors)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 

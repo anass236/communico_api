@@ -6,19 +6,58 @@ class SchemaValidationError(Exception):
     pass
 
 
-class MovieAlreadyExistsError(Exception):
+'''
+    User Exceptions
+'''
+
+
+class UserAlreadyExistsError(Exception):
     pass
 
 
-class UpdatingMovieError(Exception):
+class UpdatingUserError(Exception):
     pass
 
 
-class DeletingMovieError(Exception):
+class DeletingUserError(Exception):
     pass
 
 
-class MovieNotExistsError(Exception):
+class UserNotExistsError(Exception):
+    pass
+
+
+'''
+    Posts Exceptions
+'''
+
+
+class PostAlreadyExistsError(Exception):
+    pass
+
+
+class UpdatingPostError(Exception):
+    pass
+
+
+class DeletingPostError(Exception):
+    pass
+
+
+class PostNotExistsError(Exception):
+    pass
+
+
+'''
+    Comments Exceptions
+'''
+
+
+class DeletingCommentError(Exception):
+    pass
+
+
+class CommentNotExistsError(Exception):
     pass
 
 
@@ -39,20 +78,44 @@ errors = {
         "message": "Request is missing required fields",
         "status": 400
     },
-    "MovieAlreadyExistsError": {
-        "message": "Movie with given name already exists",
+    "UserAlreadyExistsError": {
+        "message": "User with given username already exists",
         "status": 400
     },
-    "UpdatingMovieError": {
-        "message": "Updating movie added by other is forbidden",
+    "UpdatingUserError": {
+        "message": "Updating user added by other is forbidden",
         "status": 403
     },
-    "DeletingMovieError": {
-        "message": "Deleting movie added by other is forbidden",
+    "DeletingUserError": {
+        "message": "Deleting User added by other is forbidden",
         "status": 403
     },
-    "MovieNotExistsError": {
-        "message": "Movie with given id doesn't exists",
+    "UserNotExistsError": {
+        "message": "User with given id doesn't exists",
+        "status": 400
+    },
+    "PostAlreadyExistsError": {
+        "message": "Post with given title already exists",
+        "status": 400
+    },
+    "UpdatingPostError": {
+        "message": "Updating post added by other is forbidden",
+        "status": 403
+    },
+    "DeletingPostError": {
+        "message": "Deleting Post added by other is forbidden",
+        "status": 403
+    },
+    "PostNotExistsError": {
+        "message": "Post with given id doesn't exists",
+        "status": 400
+    },
+    "DeletingCommentError": {
+        "message": "Deleting Comment added by other is forbidden",
+        "status": 403
+    },
+    "CommentNotExistsError": {
+        "message": "Comment with given id doesn't exists",
         "status": 400
     },
     "EmailAlreadyExistsError": {
