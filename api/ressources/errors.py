@@ -69,6 +69,18 @@ class UnauthorizedError(Exception):
     pass
 
 
+class EmailDoesNotExistsError(Exception):
+    pass
+
+
+class BadTokenError(Exception):
+    pass
+
+
+class ExpiredTokenError(Exception):
+    pass
+
+
 errors = {
     "InternalServerError": {
         "message": "Something went wrong",
@@ -124,6 +136,18 @@ errors = {
     },
     "UnauthorizedError": {
         "message": "Invalid username or password",
+        "status": 401
+    },
+    "EmailDoesNotExistsError": {
+        "message": "Couldn't find the user with given email address",
+        "status": 403
+    },
+    "BadTokenError": {
+        "message": "Invalid Token used",
+        "status": 401
+    },
+    "ExpiredTokenError": {
+        "message": "Your token is expired try to login again !!",
         "status": 401
     }
 }
