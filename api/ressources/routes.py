@@ -1,4 +1,5 @@
-from .user import UserApi, UsersApi
+from .comment import CommentAPI, CommentsAPI
+from .user import UserApi, UsersApi, UserFollow
 from .auth import SignupApi, LoginApi
 from .post import PostsApi, PostApi
 from .reset_password import ForgotPassword, ResetPassword
@@ -15,3 +16,8 @@ def initialize_routes(api):
     # Password reset
     api.add_resource(ForgotPassword, '/api/auth/forgot')
     api.add_resource(ResetPassword, '/api/auth/reset')
+    # Comments
+    api.add_resource(CommentAPI, '/api/comment/<id>')
+    api.add_resource(CommentsAPI, '/api/comment')
+    # Follow
+    api.add_resource(UserFollow, '/api/user/follow')

@@ -1,7 +1,7 @@
 from flask import Response, request
-from api.models.user import User
+from api.models.user import User, Followers
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from mongoengine.errors import FieldDoesNotExist, NotUniqueError, DoesNotExist, ValidationError, InvalidQueryError
 from .errors import SchemaValidationError, UserAlreadyExistsError, UserNotExistsError, DeletingUserError, \
     UpdatingUserError, InternalServerError
@@ -11,8 +11,16 @@ class UsersApi(Resource):
     @jwt_required()
     def get(self):
         try:
-            users = User.objects().to_json()
-            return Response(users, mimetype="application/json", status=200)
+            users = dict()
+            i = 0
+            for user in User.objects():
+                follow_list = [follow for follow in Followers.objects.filter(follower_username=user)]
+                following_list = [follow for follow in Followers.objects.filter(added_by=user)]
+                user = User.objects.get(id=user.id)
+                user.update(followings=follow_list, followers=following_list)
+                users[i] = user.to_json()
+                i += 1
+            return users, 200
         except DoesNotExist:
             raise UserNotExistsError
         except Exception:
@@ -67,3 +75,17 @@ class UserApi(Resource):
             raise UserNotExistsError
         except Exception:
             raise InternalServerError
+
+
+class UserFollow(Resource):
+    @jwt_required()
+    def post(self):
+        other_user_id = request.args.get('user')
+        other_user = User.objects.get(id=other_user_id)
+        user_id = get_jwt_identity()
+        user = User.objects.get(id=user_id)
+        Followers(follower_username=other_user, added_by=user).save()
+        follow_list = [follow for follow in Followers.objects.filter(added_by=user)]
+        fans_list = [follow for follow in Followers.objects.filter(follower_username=user)]
+        User.objects.get(id=user_id).update(followings=follow_list, followers=fans_list)
+        return {'message': f'User {user_id} has followed {other_user_id}'}
