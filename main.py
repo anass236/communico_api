@@ -11,6 +11,7 @@ from flask_mail import Mail
 
 
 dotenv_path = f'{dirname(__file__)}/.env'
+
 load_dotenv(dotenv_path)
 
 app = Flask(__name__)

@@ -6,20 +6,23 @@ from mongoengine.errors import FieldDoesNotExist, NotUniqueError, DoesNotExist, 
 from .errors import SchemaValidationError, UserAlreadyExistsError, UserNotExistsError, DeletingUserError, \
     UpdatingUserError, InternalServerError
 
+# Add Neo4j features
+from ..utils.database import db_auth
+from py2neo import Node, Relationship
+
 
 class UsersApi(Resource):
     @jwt_required()
     def get(self):
         try:
             users = dict()
-            i = 0
+            users["users"] = []
             for user in User.objects():
                 follow_list = [follow for follow in Followers.objects.filter(follower_username=user)]
                 following_list = [follow for follow in Followers.objects.filter(added_by=user)]
                 user = User.objects.get(id=user.id)
                 user.update(followings=follow_list, followers=following_list)
-                users[i] = user.to_json()
-                i += 1
+                users["users"].append(user.to_json())
             return users, 200
         except DoesNotExist:
             raise UserNotExistsError
@@ -30,6 +33,10 @@ class UsersApi(Resource):
         try:
             body = request.get_json()
             user = User(**body).save()
+            user_neo = Node("User", name=user.username, email=user.email)
+            user_neo.__primarylabel__ = "User"
+            user_neo.__primarykey__ = "name"
+            db_auth.merge(user_neo)
             id = user.id
             return {'id': str(id)}, 200
         except (FieldDoesNotExist, ValidationError):
